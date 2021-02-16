@@ -1,48 +1,60 @@
-import { delBasePath } from 'next/dist/next-server/lib/router/router';
+import React from 'react';
 import styled from 'styled-components';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+
 import db from '../db.json';
 import QuizBackground from '../src/components/QuizBackground';
+import QuizContainer from '../src/components/QuizContainer';
+import GitHubCorner from '../src/components/GitHubCorner';
+import QuizLogo from '../src/components/QuizLogo';
 import Widget from '../src/components/Widget';
 import Footer from '../src/components/Footer';
-import GitHubCorner from '../src/components/GitHubCorner';
-
-// const BackgroundImage = styled.div`
-//   background-image: url(${db.bg});
-//   flex: 1;
-//   background-size: cover;
-//   background-position: center;
-// `;
-
-export const QuizContainer = styled.div`
-  width: 100%;
-  max-width: 350px;
-  padding-top: 45px;
-  margin: auto 10%;
-  @media screen and (max-width: 500px) {
-    margin: auto;
-    padding: 15px;
-  }
-`;
+import Button from '../src/components/Button';
+import Input from '../src/components/Input';
 
 
 export default function Home() {
+  const router = useRouter();
+  const [name, setName] = React.useState('');
+  
   return (
     <QuizBackground backgroundImage={db.bg}>
+      <Head>
+        <title>VituQuiz!</title>
+      </Head>
       <QuizContainer>
+        <QuizLogo />
         <Widget>
           <Widget.Header>
             <h1>The Legend of Zelda</h1>
           </Widget.Header>
           <Widget.Content>
-            <p>Lorem ipsum dolor sit amet.</p>
+            <form onSubmit={function (event) {
+              event.preventDefault();
+
+              router.push(`/quiz?name=${name}`);
+            }}>
+            <Input 
+            name="nomeDoUsuario"
+            onChange={(event) => setName(event.target.value)}
+            placeholder="Diga teu nome!" 
+            value={name}
+            />
+
+            <Button type="submit" disabled={name.length === 0}>
+              {`Jogar ${name}`}
+            </Button>
+
+            </form>
           </Widget.Content>
         </Widget>
 
         <Widget>
           <Widget.Content>
-          <h1>Quizes da Galera</h1>
-          
-          <p>Lorem ipsum dolor sit amet.</p>
+            <h1>Quizes da Galera</h1>
+            
+            <p>Lorem ipsum dolor sit amet.</p>
           </Widget.Content>
         </Widget>
         <Footer />
